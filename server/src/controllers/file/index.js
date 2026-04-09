@@ -17,7 +17,8 @@ export const createFileController = async (req, res) => {
         const folderPath = path.join(process.cwd(), "assets", safeFolder);
         const filePath = path.join(folderPath, safeFile);
 
-        await fs.access(folderPath);
+        // create folder if missing
+        await fs.mkdir(folderPath, { recursive: true });
 
         try {
             await fs.access(filePath);
@@ -27,7 +28,7 @@ export const createFileController = async (req, res) => {
         await fs.writeFile(filePath, content);
         return created(res)
     } catch (error) {
-        res.status(500).json({ msg: "Internal server error" })
+        return customError(res, error.message)
     }
 };
 
@@ -51,5 +52,22 @@ export const readFileController = async (req, res) => {
 };
 
 
-// update
+// delete
+
+export const deleteFileController = async (req, res) => {
+    const { folderName, fileName } = req.body;
+    if (!fileName || !folderName) {
+        return badRequest(res, {}, "File and folder name is required")
+    };
+
+    const safeFolder = path.basename(folderName)
+    const safeFile = path.basename(fileName);
+
+    const folderPath = path.join(process.cwd(), "assets", safeFolder);
+    const filePath = path.join(folderPath, safeFile);
+
+    await fs.unlink(filePath);
+
+    return success(res)
+}
 

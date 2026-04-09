@@ -54,7 +54,6 @@ export const registerController = async (req, res) => {
     }
 };
 
-
 export const loginController = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -98,7 +97,6 @@ export const loginController = async (req, res) => {
         return internalError(res, {}, error.message);
     }
 };
-
 
 export const userProfileController = async (req, res) => {
     try {
@@ -155,5 +153,5 @@ export const refreshTokenController = async (req, res) => {
     } catch (error) {
         return internalError(res, {}, error.message);
     }
-}
+};
 
